@@ -1,3 +1,23 @@
+-- =====================================================================
+-- ISYS2099 | ISYS3434 Week 3 tutorial: COMPANY database WITHOUT keys
+--
+-- Creates the database `company_no_key` from scratch: the same tables
+-- and rows as `company`, but with no primary keys, UNIQUE constraints
+-- or foreign keys, so it has no indexes at all.
+--
+-- How to run: open this file in MySQL Workbench, make sure no text is
+-- selected, and run the whole script (lightning icon, or
+-- Ctrl + Shift + Enter on Windows / Cmd + Shift + Return on macOS).
+--
+-- WARNING: this first drops any existing database called
+-- `company_no_key`. The script can be run again at any time to get a
+-- clean copy.
+-- =====================================================================
+
+DROP DATABASE IF EXISTS company_no_key;
+CREATE DATABASE company_no_key;
+USE company_no_key;
+
 CREATE TABLE EMPLOYEE
 (
   Fname VARCHAR(10) NOT NULL,
@@ -106,3 +126,12 @@ INSERT INTO DEPT_LOCATIONS VALUES
 (5,'Bellaire'),
 (5,'Sugarland'),
 (5,'Houston');
+-- Check: expect EMPLOYEE 8, DEPARTMENT 3, DEPENDENT 7, PROJECT 6,
+-- WORKS_ON 16, DEPT_LOCATIONS 5; and no indexes on EMPLOYEE.
+SELECT 'EMPLOYEE' AS tbl, COUNT(*) AS n FROM EMPLOYEE
+UNION ALL SELECT 'DEPARTMENT', COUNT(*) FROM DEPARTMENT
+UNION ALL SELECT 'DEPENDENT', COUNT(*) FROM DEPENDENT
+UNION ALL SELECT 'PROJECT', COUNT(*) FROM PROJECT
+UNION ALL SELECT 'WORKS_ON', COUNT(*) FROM WORKS_ON
+UNION ALL SELECT 'DEPT_LOCATIONS', COUNT(*) FROM DEPT_LOCATIONS;
+SHOW INDEXES FROM EMPLOYEE;
