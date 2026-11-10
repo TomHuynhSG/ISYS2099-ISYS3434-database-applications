@@ -1,3 +1,22 @@
+-- =====================================================================
+-- ISYS2099 | ISYS3434 Week 3 tutorial: COMPANY database WITH keys
+--
+-- Creates the database `company` from scratch, with primary keys,
+-- UNIQUE constraints and foreign keys (so InnoDB builds their indexes).
+--
+-- How to run: open this file in MySQL Workbench, make sure no text is
+-- selected, and run the whole script (lightning icon, or
+-- Ctrl + Shift + Enter on Windows / Cmd + Shift + Return on macOS).
+--
+-- WARNING: this first drops any existing database called `company`,
+-- including the Week 1 Sample DB if you loaded it under that name.
+-- The script can be run again at any time to get a clean copy.
+-- =====================================================================
+
+DROP DATABASE IF EXISTS company;
+CREATE DATABASE company;
+USE company;
+
 CREATE TABLE EMPLOYEE
 (
   Fname VARCHAR(10) NOT NULL,
@@ -102,7 +121,8 @@ INSERT INTO WORKS_ON VALUES
 (987987987,10,35.0),
 (987987987,30,5.0),
 (987654321,30,20.0),
-(987654321,20,15.0);
+(987654321,20,15.0),
+(888665555,20,16.0);
 
 INSERT INTO DEPENDENT VALUES
 (333445555,'Alice','F','1986-04-04','Daughter'),
@@ -119,3 +139,19 @@ INSERT INTO DEPT_LOCATIONS VALUES
 (5,'Bellaire'),
 (5,'Sugarland'),
 (5,'Houston');
+-- Foreign keys on EMPLOYEE are added after the data is loaded, because
+-- EMPLOYEE and DEPARTMENT reference each other and EMPLOYEE references
+-- itself. InnoDB creates an index for each one (named Super_ssn and Dno).
+ALTER TABLE EMPLOYEE
+  ADD FOREIGN KEY (Super_ssn) REFERENCES EMPLOYEE(Ssn),
+  ADD FOREIGN KEY (Dno) REFERENCES DEPARTMENT(Dnumber);
+
+-- Check: expect EMPLOYEE 8, DEPARTMENT 3, DEPENDENT 7, PROJECT 6,
+-- WORKS_ON 16, DEPT_LOCATIONS 5; and indexes PRIMARY, Super_ssn, Dno.
+SELECT 'EMPLOYEE' AS tbl, COUNT(*) AS n FROM EMPLOYEE
+UNION ALL SELECT 'DEPARTMENT', COUNT(*) FROM DEPARTMENT
+UNION ALL SELECT 'DEPENDENT', COUNT(*) FROM DEPENDENT
+UNION ALL SELECT 'PROJECT', COUNT(*) FROM PROJECT
+UNION ALL SELECT 'WORKS_ON', COUNT(*) FROM WORKS_ON
+UNION ALL SELECT 'DEPT_LOCATIONS', COUNT(*) FROM DEPT_LOCATIONS;
+SHOW INDEXES FROM EMPLOYEE;
